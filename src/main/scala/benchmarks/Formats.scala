@@ -28,6 +28,8 @@ object TextFormat extends Format {
       override def elements =
         Seq("Result",
             "Name",
+            "GC",
+            "Threads",
             "iter",
             "min [ms]",
             "max [ms]",
@@ -107,6 +109,8 @@ object Formattable {
 case class CompletedRow(name: String,
                         success: String,
                         iterations: Int,
+                        threads: Int,
+                        gc: String,
                         min: String,
                         max: String,
                         avg: String,
@@ -119,6 +123,8 @@ case class CompletedRow(name: String,
   override def elements: Seq[String] =
     Seq(success,
         name,
+        gc,
+        threads.toString,
         iterations.toString,
         min,
         max,
@@ -135,16 +141,18 @@ object CompletedRow {
     import StatUtils._
     import completed._
 
-    val successStr = if (success) "[OK]" else "[FAIL]"
-    val timesMs    = timesNs map (_ / 1e6)
-    val sortedMs   = timesMs.sorted
-    val minMs      = timesMs.min
-    val maxMs      = timesMs.max
-    val avgMs      = average(timesMs)
-    val medianMs   = percentile(50, sortedMs)
-    val p95Ms      = percentile(95, sortedMs)
-    val p05Ms      = percentile(5, sortedMs)
-    val iterations = timesNs.length
+    val successStr  = if (success) "[OK]" else "[FAIL]"
+    val timesMs     = timesNs map (_ / 1e6)
+    val sortedMs    = timesMs.sorted
+    val minMs       = timesMs.min
+    val maxMs       = timesMs.max
+    val avgMs       = average(timesMs)
+    val medianMs    = percentile(50, sortedMs)
+    val p95Ms       = percentile(95, sortedMs)
+    val p05Ms       = percentile(5, sortedMs)
+    val gc          = if(System.getenv.containsKey("SCALANATIVE_GC"))  System.getenv.get("SCALANATIVE_GC") else "default"
+    val iterations  = completed.iterations
+    val threadCount = completed.threadCount
     val stddevMs =
       Math.sqrt(timesMs.map(t => Math.pow(t - avgMs, 2) / iterations).sum)
     val avgBetweenP05AndP95 =
@@ -154,6 +162,8 @@ object CompletedRow {
       name,
       successStr,
       iterations,
+      threadCount,
+      gc,
       format(minMs),
       format(maxMs),
       format(avgMs),

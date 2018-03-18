@@ -4,6 +4,7 @@ sealed abstract class BenchmarkResult(val name: String, val success: Boolean)
 
 case class BenchmarkCompleted(override val name: String,
                               iterations: Int,
+                              threadCount: Int,
                               timesNs: Seq[Long],
                               override val success: Boolean)
     extends BenchmarkResult(name, success)
@@ -28,6 +29,8 @@ abstract class Benchmark[T]() {
 
   val runningTime: BenchmarkRunningTime
 
+  def threadCount: Int
+
   def iterations(): Int = runningTime.iterations
 
   private class BenchmarkDisabledException extends Exception
@@ -49,7 +52,7 @@ abstract class Benchmark[T]() {
         i = i + 1
       }
 
-      BenchmarkCompleted(this.getClass.getName, iterations, times, success)
+      BenchmarkCompleted(this.getClass.getName, iterations, threadCount, times, success)
     } catch {
       case _: BenchmarkDisabledException =>
         BenchmarkDisabled(this.getClass.getName)
