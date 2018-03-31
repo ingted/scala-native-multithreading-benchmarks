@@ -22,6 +22,6 @@ object Main {
       dumpMemInfo()
     }
 
-    if (success) exit(0) else exit(1)
+    if (!success) exit(1)
   }
 }
