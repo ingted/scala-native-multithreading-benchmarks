@@ -1,14 +1,16 @@
 package benchmarks
 
 final class Opts(val format: Format = TextFormat,
+                 val outFile: Option[String] = None,
                  val meminfo: Boolean = false,
                  val iterations: Int = 5,
                  val threadCount: Int = Runtime.getRuntime.availableProcessors()) {
   def copy(format: Format = format,
+           outFile: Option[String] = outFile,
            meminfo: Boolean = meminfo,
            iterations: Int = iterations,
            threadCount: Int = threadCount): Opts =
-    new Opts(format, meminfo, iterations, threadCount)
+    new Opts(format, outFile, meminfo, iterations, threadCount)
 }
 
 object Opts {
@@ -16,6 +18,8 @@ object Opts {
     def loop(opts: Opts, args: List[String]): Opts = args match {
       case "--format" :: format :: rest =>
         loop(opts.copy(format = Format(format)), rest)
+      case "--out" :: file :: rest =>
+        loop(opts.copy(outFile = Some(file)), rest)
       case "--threads" :: threads :: rest =>
         loop(opts.copy(threadCount = threads.toInt), rest)
       case "--iterations" :: iterations :: rest =>

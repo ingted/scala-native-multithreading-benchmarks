@@ -1,5 +1,6 @@
 package benchmarks
 
+import java.io.PrintWriter
 import java.lang.System.exit
 
 import montecarlo.PiMultiThreadBenchmark
@@ -17,6 +18,14 @@ object Main {
     val success = results.forall(_.success)
 
     println(opts.format.show(results))
+
+    opts.outFile.foreach{
+      fileName =>
+        val writer = new PrintWriter(fileName)
+        writer.println(CSVFormat.show(results))
+        writer.close()
+    }
+
 
     if (opts.meminfo) {
       dumpMemInfo()
