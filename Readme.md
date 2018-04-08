@@ -17,5 +17,10 @@ Alternatively run individual test suites with `./test.sh` scripts in the subproj
 - `--out [file]` Specifies the csv output file for results. The old file is overwriten.
 - `--threads [number]` How many threads should be created. Uses all available (virtual) cores by default.
 - `--iterations [number]` How many times the should the test be repeated. **default:** `5`
+- `--futures` use `Future`s instead of threads.
 
 The garbage collector can be set by `export SCALANATIVE_GC=boehm` or `export SCALANATIVE_GC=none`
+
+## Benchmarks
+- Finding Pi with Montecarlo simulation using threads. Number of points = 3 000 000
+- Finding Pi with Montecarlo simulation using a `Future` per point. Number of points = 200 000. Enable with `--futures`
