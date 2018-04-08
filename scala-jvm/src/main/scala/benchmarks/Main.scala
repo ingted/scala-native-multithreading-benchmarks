@@ -3,12 +3,17 @@ package benchmarks
 import java.io.PrintWriter
 import java.lang.System.exit
 
-import montecarlo.PiMultiThreadBenchmark
+import montecarlo.{PiFuturesBenchmark, PiMultiThreadBenchmark}
 
 object Main {
   def main(args: Array[String]): Unit = {
     val opts = Opts(args)
-    val benchmarks = Seq(new PiMultiThreadBenchmark(opts.threadCount))
+    val benchmarks = if (opts.useFutures) {
+      Seq(new PiFuturesBenchmark(opts.threadCount))
+    } else {
+      Seq(new PiMultiThreadBenchmark(opts.threadCount))
+    }
+
 
     val results = benchmarks.map { bench =>
       bench.loop(opts.iterations)
