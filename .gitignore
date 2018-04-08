@@ -122,3 +122,7 @@ project/plugins/project/
 .lib/
 
 .idea/
+
+# custom
+results/
+report/
