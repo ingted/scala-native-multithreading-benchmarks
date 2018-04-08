@@ -26,11 +26,6 @@ object Main {
         writer.close()
     }
 
-
-    if (opts.meminfo) {
-      dumpMemInfo()
-    }
-
     if (success) exit(0) else exit(1)
   }
 }

@@ -2,15 +2,13 @@ package benchmarks
 
 final class Opts(val format: Format = TextFormat,
                  val outFile: Option[String] = None,
-                 val meminfo: Boolean = false,
                  val iterations: Int = 5,
                  val threadCount: Int = Runtime.getRuntime.availableProcessors()) {
   def copy(format: Format = format,
            outFile: Option[String] = outFile,
-           meminfo: Boolean = meminfo,
            iterations: Int = iterations,
            threadCount: Int = threadCount): Opts =
-    new Opts(format, outFile, meminfo, iterations, threadCount)
+    new Opts(format, outFile, iterations, threadCount)
 }
 
 object Opts {
@@ -24,8 +22,6 @@ object Opts {
         loop(opts.copy(threadCount = threads.toInt), rest)
       case "--iterations" :: iterations :: rest =>
         loop(opts.copy(iterations = iterations.toInt), rest)
-      case "--meminfo" :: rest =>
-        loop(opts.copy(meminfo = true), rest)
       case other :: _ =>
         throw new Exception("unrecognized option: " + other)
       case Nil =>

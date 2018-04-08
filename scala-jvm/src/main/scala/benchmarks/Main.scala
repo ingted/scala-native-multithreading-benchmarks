@@ -6,7 +6,6 @@ import java.lang.System.exit
 import montecarlo.PiMultiThreadBenchmark
 
 object Main {
-  def dumpMemInfo(): Unit = {}
   def main(args: Array[String]): Unit = {
     val opts = Opts(args)
     val benchmarks = Seq(new PiMultiThreadBenchmark(opts.threadCount))
@@ -24,10 +23,6 @@ object Main {
         val writer = new PrintWriter(fileName)
         writer.println(CSVFormat.show(results))
         writer.close()
-    }
-
-    if (opts.meminfo) {
-      dumpMemInfo()
     }
 
     if (!success) exit(1)
